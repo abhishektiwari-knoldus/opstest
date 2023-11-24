@@ -6,7 +6,7 @@ workflows:
 jobs:
   runner-test:
     docker:
-      - image: circleci/node:14.17-browsers
+      - image: cimg/base:2022.06
     steps:
       - checkout
       - run: docker login -u abhishek00007 -p abhishek@123
