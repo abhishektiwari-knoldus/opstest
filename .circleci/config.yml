@@ -5,7 +5,8 @@ workflows:
       - runner-test
 jobs:
   runner-test:
-    machine: true
-    resource_class: opsinitt/new
+    docker:
+      - image: cimg/python:3.11
     steps:
+      - checkout
       - run: echo "Hi I'm on Runners!"
