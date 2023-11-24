@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  node_app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"  # Expose port 3000 on host to access the Node.js application
+    depends_on:
+      - mysql_db  # Specifies that this service depends on the 'mysql_db' service
+
+  mysql_db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root  # Replace with your desired root password
+      MYSQL_DATABASE: form  # Replace with your desired database name
+      MYSQL_USER: user # Replace with your desired username
+      MYSQL_PASSWORD: akash  # Replace with your desired password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql  # Mount the volume to persist MySQL data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  mysql_data:  # Define the named volume for MySQL data persistence

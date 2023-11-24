@@ -6,7 +6,9 @@ workflows:
 jobs:
   runner-test:
     docker:
-      - image: cimg/python:3.11
+      - image: circleci/node:14.17-browsers
     steps:
       - checkout
-      - run: echo "Hi I'm on Runners!"
+      - run: docker login -u abhishek00007 -p abhishek@123
+      - run: docker build -t abhishek00007/newnode .
+      - run: docker push abhishek00007/newnode
