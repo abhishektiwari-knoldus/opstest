@@ -10,6 +10,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
+          docker_layer_caching: false
       - run: docker login -u abhishek00007 -p abhishek@123
       - run: docker build -t abhishek00007/newnode .
       - run: docker push abhishek00007/newnode
