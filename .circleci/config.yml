@@ -9,6 +9,7 @@ jobs:
       - image: cimg/base:2022.06
     steps:
       - checkout
+      - setup_remote_docker:
       - run: docker login -u abhishek00007 -p abhishek@123
       - run: docker build -t abhishek00007/newnode .
       - run: docker push abhishek00007/newnode
