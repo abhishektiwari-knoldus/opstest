@@ -4,14 +4,7 @@ jobs:
   runner-test:
     docker:
       - image: circleci/node:12
-    steps:
-     - add_ssh_keys:
-         fingerprints:
-           - "2f:72:fa:ca:c5:7e:3d:26:f3:95:f1:0a:bb:1e:6b:1f"
-     - run:
-          name: Start SSH
-          command: echo 'Starting SSH...'
-          background: true    
+    steps:   
       - checkout
       - setup_remote_docker:
           docker_layer_caching: false
