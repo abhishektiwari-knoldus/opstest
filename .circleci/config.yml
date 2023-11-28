@@ -1,23 +1,19 @@
 version: 2.1
 
+orbs:
+  docker: circleci/docker@2.4.0         # Replace x.y.z with the desired version of the Docker Orb
+
 jobs:
-  runner-test:
-    docker:
-      - image: circleci/node:12
-    steps:   
+  build-and-push:
+    executor: docker/default
+    steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: false
-      - run:
-          name: Building docker image
-          command: |
-            echo $docker_password | docker login -u abhishek00007 --password-stdin
-            docker build -t abhishek00007/newnode .
-            docker push abhishek00007/newnode            
-workflows:
-  testing:
-    jobs:
-      - runner-test
-            
-            
-            
+      
+      # Use the Docker Orb commands to build and push the Docker image
+      - docker/build:
+          image: abhishek00007/node-orb:latest  # Specify the image to build
+      - docker/push:
+          image: abhishek00007/node-orb:latest  # Specify the image to push
+          registry: https://hub.docker.com/  # Replace with your registry URL
+          username: $DOCKERHUB_USERNAME  # Use environment variables or secrets for credentials
+          password: $docker_password
