@@ -11,6 +11,11 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: false
-      - run: echo $docker_password | docker login -u abhishek00007 --password-stdin
-      - run: docker build -t abhishek00007/newnode .
       - run: docker push abhishek00007/newnode
+          name: Building docker image
+          command: |
+            echo $docker_password | docker login -u abhishek00007 --password-stdin
+            docker build -t abhishek00007/newnode .
+            docker push abhishek00007/newnode
+            
+            
