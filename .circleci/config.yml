@@ -21,4 +21,5 @@ jobs:
 workflows:
   testing:
     jobs:
-      - build-and-push
+      - docker/build
+      - docker/push
