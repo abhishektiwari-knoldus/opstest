@@ -13,8 +13,7 @@ jobs:
           command: |
             echo $docker_password | docker login -u abhishek00007 --password-stdin
             docker build -t abhishek00007/newnode .
-            docker push abhishek00007/newnode
-            
+            docker push abhishek00007/newnode            
 workflows:
   testing:
     jobs:
