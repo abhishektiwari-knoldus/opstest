@@ -17,3 +17,8 @@ jobs:
           registry: https://hub.docker.com/  # Replace with your registry URL
           username: $DOCKERHUB_USERNAME  # Use environment variables or secrets for credentials
           password: $docker_password
+
+workflows:
+  testing:
+    jobs:
+      - build-and-push
