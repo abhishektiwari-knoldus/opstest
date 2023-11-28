@@ -23,5 +23,6 @@ services:
       - mysql_data:/var/lib/mysql  # Mount the volume to persist MySQL data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
+
 volumes:
   mysql_data:  # Define the named volume for MySQL data persistence
