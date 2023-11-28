@@ -1,8 +1,5 @@
 version: 2.1
-workflows:
-  testing:
-    jobs:
-      - runner-test
+
 jobs:
   runner-test:
     docker:
@@ -17,5 +14,11 @@ jobs:
             echo $docker_password | docker login -u abhishek00007 --password-stdin
             docker build -t abhishek00007/newnode .
             docker push abhishek00007/newnode
+            
+workflows:
+  testing:
+    jobs:
+      - runner-test
+            
             
             
