@@ -1,28 +1,15 @@
-# version: '2.1'
-# orbs:
-#   docker: circleci/docker@2.4.0
-# jobs:
-#   check-and-build-only:
-#     executor: docker/machine
-#     steps:
-#       - checkout
-#       # - docker/check
-#       - docker/build:
-#           image: docker build --file=./Dockerfile --tag=abhishek00007/org-node:latest .
-# workflows:
-#   build-docker-image-only:
-#     jobs:
-#       - check-and-build-only
-
-
 version: '2.1'
 orbs:
   docker: circleci/docker@2.4.0
+
 workflows:
   build-and-publish-docker-image:
     jobs:
+      - docker/login:
+          username: abhishek00007
+          password: abhishek@123
       - docker/publish:
           dockerfile: Dockerfile
-          image: bhishek00007/org-node:latest
+          image: abhishek00007/org-node:latest
           path: .
           registry: https://hub.docker.com/
