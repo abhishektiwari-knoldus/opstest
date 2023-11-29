@@ -1,18 +1,46 @@
-version: '2.1'
+# version: '2.1'
+# orbs:
+#   docker: circleci/docker@2.4.0
+
+#     jobs:
+#       docker/login:
+#         username: abhishek00007
+#         password: abhishek@123
+#       docker/publish:
+#         dockerfile: Dockerfile
+#         image: abhishek00007/org-node:latest
+#         path: .
+#         registry: https://hub.docker.com/
+
+# workflows:
+#   build-and-publish-docker-image:
+#     - docker/login
+#     - docker/publish
+
+
+
+
+
+    version: '2.1'
 orbs:
   docker: circleci/docker@2.4.0
 
-    jobs:
-      docker/login:
-        username: abhishek00007
-        password: abhishek@123
-      docker/publish:
-        dockerfile: Dockerfile
-        image: abhishek00007/org-node:latest
-        path: .
-        registry: https://hub.docker.com/
+jobs:
+  login-and-publish:
+    docker:
+      - image: circleci/node:14.17.0  # Using a Node.js image as an example
+    steps:
+      - docker/login:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
+      - docker/publish:
+          dockerfile: Dockerfile
+          image: abhishek00007/org-node:latest
+          path: .
+          registry: https://hub.docker.com/
 
 workflows:
   build-and-publish-docker-image:
-    - docker/login
-    - docker/publish
+    jobs:
+      - login-and-publish
+
