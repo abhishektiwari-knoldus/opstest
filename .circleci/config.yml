@@ -2,8 +2,6 @@ version: '2.1'
 orbs:
   docker: circleci/docker@2.4.0
 
-workflows:
-  build-and-publish-docker-image:
     jobs:
       - docker/login:
           username: abhishek00007
@@ -13,3 +11,8 @@ workflows:
           image: abhishek00007/org-node:latest
           path: .
           registry: https://hub.docker.com/
+
+workflows:
+  build-and-publish-docker-image:
+    - docker/login
+    - docker/publish
