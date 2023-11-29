@@ -1,21 +1,15 @@
-version: 2.1
-
+version: '2.1'
+orbs:
+  docker: circleci/docker@2.4.0
 jobs:
-  runner-test:
-    docker:
-      - image: circleci/node:12
-    steps:   
+  check-and-build-only:
+    executor: docker/machine
+    steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: false
-      - run:
-          name: Building docker image
-          command: |
-            echo $docker_password | docker login -u abhishek00007 --password-stdin
-            docker build -t abhishek00007/newnode .
-            docker push abhishek00007/newnode
-            
+      - docker/check
+      - docker/build:
+          image: abhishek00007/org-node:latest
 workflows:
-  testing:
+  build-docker-image-only:
     jobs:
-      - runner-test
+      - check-and-build-only
