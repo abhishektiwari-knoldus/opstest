@@ -3,14 +3,14 @@ orbs:
   docker: circleci/docker@2.4.0
 
     jobs:
-      - docker/login:
-          username: abhishek00007
-          password: abhishek@123
-      - docker/publish:
-          dockerfile: Dockerfile
-          image: abhishek00007/org-node:latest
-          path: .
-          registry: https://hub.docker.com/
+      docker/login:
+        username: abhishek00007
+        password: abhishek@123
+      docker/publish:
+        dockerfile: Dockerfile
+        image: abhishek00007/org-node:latest
+        path: .
+        registry: https://hub.docker.com/
 
 workflows:
   build-and-publish-docker-image:
