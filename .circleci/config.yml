@@ -8,7 +8,7 @@ jobs:
       - checkout
       # - docker/check
       - docker/build:
-          image: docker build -t abhishek00007/org-node:latest .
+          image: docker build --file=./Dockerfile --tag=abhishek00007/org-node:latest .
 workflows:
   build-docker-image-only:
     jobs:
