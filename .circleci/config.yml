@@ -6,7 +6,7 @@ jobs:
     executor: docker/machine
     steps:
       - checkout
-      - docker/check
+      # - docker/check
       - docker/build:
           image: abhishek00007/org-node:latest
 workflows:
