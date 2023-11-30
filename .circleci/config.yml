@@ -26,7 +26,7 @@ jobs:
             # sudo apt-get update
             az account set --subscription 1ce8bf33-286c-42dd-b193-10c310dd14b7
             az aks get-credentials --resource-group speakeasy --name speakeasy
-            kubectl apply -f deployment.yml
+            kubectl apply -f service.yml
             kubectl set image deployment/nodejs nodejs-aks-app=abhishek00007/newnode:$CIRCLE_BUILD_NUM
 
 
