@@ -34,5 +34,4 @@ workflows:
     jobs:
       - buildAndPush
       - deployment
-          requires:
-            - buildAndPush
+
