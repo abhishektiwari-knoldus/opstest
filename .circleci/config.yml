@@ -1,46 +1,38 @@
-# version: '2.1'
-# orbs:
-#   docker: circleci/docker@2.4.0
-
-#     jobs:
-#       docker/login:
-#         username: abhishek00007
-#         password: abhishek@123
-#       docker/publish:
-#         dockerfile: Dockerfile
-#         image: abhishek00007/org-node:latest
-#         path: .
-#         registry: https://hub.docker.com/
-
-# workflows:
-#   build-and-publish-docker-image:
-#     - docker/login
-#     - docker/publish
-
-
-
-
-
-version: '2.1'
-orbs:
-  docker: circleci/docker@2.4.0
+version: 2.1
 
 jobs:
-  login-and-publish:
+  buildAndPush:
     docker:
-      - image: circleci/node:14.17.0  # Using a Node.js image as an example
+      - image: circleci/node:12
+    steps:   
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: false
+      - run:
+          name: Building docker image
+          command: |
+            echo $docker_password | docker login -u abhishek00007 --password-stdin
+            docker build -t abhishek00007/newnode:latest .
+            docker push abhishek00007/newnode:latest
+  deployment:
+    docker:
+      - image: circleci/node:12
     steps:
-      - docker/login:
-          username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_PASSWORD
-      - docker/publish:
-          dockerfile: Dockerfile
-          image: abhishek00007/org-node:latest
-          path: .
-          registry: https://hub.docker.com/
+      - checkout
+      - run:
+          name: deploy-to-AKS
+          command: |
+            az login --service-principal -u 79d9244d-c692-4f4e-869c-995779c1ec31 -p xEU8Q~WHk_de7Bq0RJxhWS5z9OuDRfaOYuQEXb2m
+            az account set --subscription 1ce8bf33-286c-42dd-b193-10c310dd14b7
+            az aks get-credentials --resource-group speakeasy --name speakeasy
+            kubectl apply -f deployment.yml
+            kubectl set image deployment/nodejs nodejs-aks-app=abhishek00007/newnode:$CIRCLE_BUILD_NUM
+
 
 workflows:
-  build-and-publish-docker-image:
+  testing:
     jobs:
-      - login-and-publish
-
+      - buildAndPush
+      - deployment
+          requires:
+            - buildAndPush
