@@ -18,7 +18,7 @@ spec:
         "beta.kubernetes.io/os": linux
       containers:
         - name: nodejs-aks-app
-          image: abhishek00007/newnode
+          image: abhishek00007/newnode:latest
           ports:
             - name: http
               containerPort: 3000
