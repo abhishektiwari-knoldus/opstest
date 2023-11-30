@@ -13,8 +13,8 @@ jobs:
           command: |
             echo $docker_password | docker login -u abhishek00007 --password-stdin
             GIT_COMMIT=$(git rev-parse --short HEAD)
-            docker build -t abhishek00007/newnode:$CIRCLE_BUILD_NUM .
-            docker push abhishek00007/newnode:$CIRCLE_BUILD_NUM
+            docker build -t abhishek00007/newnode:$GIT_COMMIT .
+            docker push abhishek00007/newnode:$GIT_COMMIT
   deployment:
     docker:
       - image: abhishek00007/runner1
@@ -22,14 +22,14 @@ jobs:
       - checkout
       - run:
           name: deploy-to-AKS
-          command: |            
+          command: |   
+            GIT_COMMIT=$(git rev-parse --short HEAD)
             az login --service-principal -u f42f382a-55c6-47fc-82f5-61c645c92800 -p NrS8Q~iVlkLkh95j-jL2bGqw4Xb.gQkikt62jcFR --tenant bddba232-ecf3-49b7-a5b2-7cd128fc6135
-            # sudo apt-get update
             az account set --subscription 1ce8bf33-286c-42dd-b193-10c310dd14b7
             az aks get-credentials --resource-group speakeasy --name speakeasy
             kubectl apply -f deployment.yml
             kubectl apply -f service.yml
-            kubectl set image deployment/nodejs nodejs-aks-app=abhishek00007/newnode:$CIRCLE_BUILD_NUM
+            kubectl set image deployment/nodejs nodejs-aks-app=abhishek00007/newnode:$GIT_COMMIT
 
 
 workflows:
