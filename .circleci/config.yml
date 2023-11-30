@@ -16,7 +16,7 @@ jobs:
             docker push abhishek00007/newnode:latest
   deployment:
     docker:
-      - image: cimg/base:2021.04
+      - image: abhishek00007/runner1
     steps:
       - checkout
       - run:
