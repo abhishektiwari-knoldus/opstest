@@ -34,7 +34,7 @@ workflows:
   testing:
     jobs:
       - buildAndPush
-      - deployment
+      - deployment:
           requires:
             - buildAndPush
 
