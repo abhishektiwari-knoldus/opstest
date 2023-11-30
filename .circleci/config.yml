@@ -22,7 +22,7 @@ jobs:
       - run:
           name: deploy-to-AKS
           command: |
-            apt update
+            
             curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
             az login --service-principal -u 79d9244d-c692-4f4e-869c-995779c1ec31 -p r2c8Q~_UDX7m3RbOUcNRg-ttTPAp4qczWSzLgcw-
             az account set --subscription 1ce8bf33-286c-42dd-b193-10c310dd14b7
