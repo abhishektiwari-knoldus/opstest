@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   buildAndPush:
     docker:
-      - image: circleci/node:12
+      - image: cimg/base:2021.04
     steps:   
       - checkout
       - setup_remote_docker:
@@ -16,7 +16,7 @@ jobs:
             docker push abhishek00007/newnode:latest
   deployment:
     docker:
-      - image: circleci/node:12
+      - image: cimg/base:2021.04
     steps:
       - checkout
       - run:
