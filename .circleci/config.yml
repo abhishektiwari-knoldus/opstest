@@ -68,3 +68,7 @@ commands:
                       docker push "<<parameters.registry>>/<<parameters.image>>:<<parameters.tag>>"
                     fi
                 name: docker push (tag) 
+workflows:
+  test:
+    - build
+    - push
