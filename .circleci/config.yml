@@ -71,4 +71,4 @@ commands:
 workflows:
   test:
     - build
-    - push
+    - push-with-tag
