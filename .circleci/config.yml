@@ -1,74 +1,75 @@
 version: 2.1
 orbs:
   docker: talkiq/docker@3.0.0
-  
 
 commands:
-    build:
+  build:
+    description: |
+      Build a docker image.
+    parameters:
+      build_args:
+        default: ""
         description: |
-            Build a docker image.
-        parameters:
-            build_args:
-                default: ""
-                description: |
-                    Extra flags to pass to docker build.
-                type: string
-            dockerfile:
-                default: Dockerfile
-                description: |
-                    Name of dockerfile to use.
-                type: string
-            local_image_name:
-                default: ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_TAG}
-                description: |
-                    Name of image to build. Note that if you will be using any of the tag commands, this is ultimately irrelevant since the image will be re-tagged according to your settings.
-                type: string
-            path:
-                default: .
-                description: |
-                    Path to the build context directory containing your Dockerfile.
-                type: string
+          Extra flags to pass to docker build.
+        type: string
+      dockerfile:
+        default: Dockerfile
+        description: |
+          Name of dockerfile to use.
+        type: string
+      local_image_name:
+        default: ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_TAG}
+        description: |
+          Name of image to build. Note that if you will be using any of the tag commands, this is ultimately irrelevant since the image will be re-tagged according to your settings.
+        type: string
+      path:
+        default: .
+        description: |
+          Path to the build context directory containing your Dockerfile.
+        type: string
+    steps:
+      - run:
+          command: |
+            docker build \
+              <<parameters.build_args>> \
+              --progress=plain \
+              -f <<parameters.dockerfile>> \
+              -t <<parameters.local_image_name>> \
+              <<parameters.path>>
+          environment:
+            DOCKER_BUILDKIT: 1
+          name: docker build
 
-        steps:
-            - run:
-                command: |
-                    docker build \
-                      <<parameters.build_args>> \
-                      --progress=plain \
-                      -f <<parameters.path>>/<<parameters.dockerfile>> \
-                      -t <<parameters.local_image_name>> \
-                      <<parameters.path>>
-                environment:
-                    DOCKER_BUILDKIT: 1
-                name: docker build  
-    push:
-    push-with-tag:
+  push:
+    description: |
+      Push the built and tagged docker image corresponding to the current tag, if this is a tag build. Otherwise, this is a noop.
+    parameters:
+      image:
+        default: ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_TAG}
         description: |
-            Push the built and tagged docker image corresponding to the current tag, if this is a tag build. Otherwise, this is a noop.
-        parameters:
-            image:
-                default: ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_TAG}
-                description: |
-                    Name of the target image. Note that this includes any namespacing -- eg. for pushing to Dockerhub, you likely want to ensure this looks like "talkiq/foobar"; for other repositories, this may be some other namespace such as "my-gcp-project/my-image-name" for GCR.
-                type: string
-            registry:
-                default: abhishek00007
-                description: |
-                    Container registry to-be-used.
-                type: string
-            tag:
-                default: ${CIRCLE_TAG}
-                description: |
-                    Name of the target tag to be used.
-                type: string
-        steps:
-            - run:
-                command: |
-                    if [[ -n "<<parameters.tag>>" ]]; then
-                      docker push "<<parameters.registry>>/<<parameters.image>>:<<parameters.tag>>"
-                    fi
-                name: docker push (tag) 
+          Name of the target image. Note that this includes any namespacing -- eg. for pushing to Dockerhub, you likely want to ensure this looks like "talkiq/foobar"; for other repositories, this may be some other namespace such as "my-gcp-project/my-image-name" for GCR.
+        type: string
+      registry:
+        default: abhishek00007
+        description: |
+          Container registry to-be-used.
+        type: string
+      tag:
+        default: ${CIRCLE_TAG}
+        description: |
+          Name of the target tag to be used.
+        type: string
+    steps:
+      - run:
+          command: |
+            docker push "<<parameters.registry>>/<<parameters.image>>:<<parameters.tag>>"
+          when: <<pipeline.git.tag>>
+          name: docker push (tag)
+
 workflows:
   test:
-    - build
-    - push-with-tag
+    jobs:
+      - build
+      - push:
+          requires:
+            - build
