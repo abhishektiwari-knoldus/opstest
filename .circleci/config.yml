@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   docker: talkiq/docker@3.0.0
-  
+
 parameters:
   build_args:
     default: ""
@@ -23,8 +23,6 @@ parameters:
     description: |
       Path to the build context directory containing your Dockerfile.
     type: string
-
-    parameters:
   image:
     default: ${CIRCLE_PROJECT_REPONAME}:${CIRCLE_TAG}
     description: |
@@ -40,31 +38,27 @@ parameters:
     description: |
       Name of the target tag to be used.
     type: string
-    
-jobs:    
-  build:      
-      steps:
-        - run:
-            command: |
-              docker build \
-                <<parameters.build_args>> \
-                --progress=plain \
-                -f <<parameters.dockerfile>> \
-                -t <<parameters.local_image_name>> \
-                <<parameters.path>>
-            environment:
-              DOCKER_BUILDKIT: 1
-            name: docker build
-  
-  
-  
-  push:      
-      steps:
-        - run:
-            command: |
-              docker push "<<parameters.registry>>/<<parameters.image>>:<<parameters.tag>>"
-            when: <<pipeline.git.tag>>
-            name: docker push (tag)
+
+jobs:
+  build:
+    docker:
+      - image: <<parameters.local_image_name>>
+    steps:
+      - checkout
+      - docker/build:
+          build-args: <<parameters.build_args>>
+          dockerfile: <<parameters.dockerfile>>
+          context: <<parameters.path>>
+
+  push:
+    docker:
+      - image: <<parameters.local_image_name>>
+    steps:
+      - run:
+          command: |
+            docker push "<<parameters.registry>>/<<parameters.image>>:<<parameters.tag>>"
+          when: <<pipeline.git.tag>>
+          name: docker push (tag)
 
 workflows:
   test:
