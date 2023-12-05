@@ -42,7 +42,7 @@ parameters:
 jobs:
   build:
     docker:
-      - image: <<parameters.local_image_name>>
+      - image: ${parameters.local_image_name}
     steps:
       - checkout
       - docker/build:
