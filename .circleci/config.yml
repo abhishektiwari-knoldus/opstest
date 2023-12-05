@@ -46,18 +46,18 @@ jobs:
     steps:
       - checkout
       - docker/build:
-          build-args: <<parameters.build_args>>
-          dockerfile: <<parameters.dockerfile>>
-          context: <<parameters.path>>
+          build-args: ${parameters.build_args}
+          dockerfile: ${parameters.dockerfile}
+          context: ${parameters.path}
 
   push:
     docker:
-      - image: <<parameters.local_image_name>>
+      - image: ${parameters.local_image_name}
     steps:
       - run:
           command: |
             docker push "<<parameters.registry>>/<<parameters.image>>:<<parameters.tag>>"
-          when: <<pipeline.git.tag>>
+          when: ${pipeline.git.tag}
           name: docker push (tag)
 
 workflows:
